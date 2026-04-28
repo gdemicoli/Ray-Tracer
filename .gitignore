@@ -1,0 +1,12 @@
+build/
+cmake-build-*/
+*.o
+*.obj
+*.out
+*.exe
+*.app
+
+raytracer
+app
+main
+

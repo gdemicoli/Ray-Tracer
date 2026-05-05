@@ -1,12 +1,4 @@
 build/
-cmake-build-*/
+*.ppm
 *.o
-*.obj
-*.out
-*.exe
-*.app
-
-raytracer
-app
-main
-
+.DS_Store

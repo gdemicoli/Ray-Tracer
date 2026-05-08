@@ -15,8 +15,8 @@ int main()
 
     vec3 vector3 = vec3(8, 5, 4);
     vec3 norm = vector3.normalise();
-    std::cout << norm.x << " " << norm.y << " " << norm.z;
-
+    std::cout << norm.x << " " << norm.y << " " << norm.z << std::endl;
+    std::cout << norm.length();
     // std::ofstream out("image.ppm");
 
     // out << "P3\n";

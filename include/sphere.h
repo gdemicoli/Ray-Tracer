@@ -9,5 +9,5 @@ public:
     double radius;
 
     sphere(vec3 centre, double radius);
-    vec3 hit(const ray& ray);
+    double hit(const ray& ray);
 };

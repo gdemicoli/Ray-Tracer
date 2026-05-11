@@ -1,13 +1,13 @@
 #pragma once
-#include "vec3.h"
-#include "ray.h"
+#include "Vec3.h"
+#include "Ray.h"
 
-class sphere
+class Sphere
 {
 public:
-    vec3 centre;
+    Vec3 centre;
     double radius;
 
-    sphere(vec3 centre, double radius);
-    double hit(const ray& ray);
+    Sphere(Vec3 centre, double radius);
+    double hit(const Ray& ray);
 };

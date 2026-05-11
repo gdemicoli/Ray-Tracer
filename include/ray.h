@@ -1,12 +1,12 @@
 #pragma once
-#include "vec3.h"
+#include "Vec3.h"
 
-class ray
+class Ray
 {
 public:
-    vec3 origin;
-    vec3 direction;
+    Vec3 origin;
+    Vec3 direction;
 
-    ray(vec3 origin, vec3 direction);
-    vec3 at(double t);
+    Ray(Vec3 origin, Vec3 direction);
+    Vec3 at(double t) const;
 };

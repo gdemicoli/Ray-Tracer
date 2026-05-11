@@ -1,40 +1,49 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "vec3.h"
+#include "Vec3.h"
+#include "Ray.h"
+#include "Sphere.h"
 
 int main()
 {
 
-    vec3 vector1 = vec3(1, 0, 0);
-    vec3 vector2 = vec3(0, 1, 0);
+    std::ofstream out("image.ppm");
 
-    double dp = vector2 * vector1;
+    out << "P3\n";
+    out << "256 256\n";
+    out << "255\n";
 
-    std::cout << dp << std::endl;
+    std::string str = "";
 
-    vec3 vector3 = vec3(8, 5, 4);
-    vec3 norm = vector3.normalise();
-    std::cout << norm.x << " " << norm.y << " " << norm.z << std::endl;
-    std::cout << norm.length();
-    // std::ofstream out("image.ppm");
+    Sphere sphere = Sphere(Vec3(128, 128, 10), 70);
+    Vec3 eye = Vec3(128, 128, -100);
 
-    // out << "P3\n";
-    // out << "256 256\n";
-    // out << "255\n";
-
-    // std::string str = "";
-
-    // std::cout << "Ray tracer starting..." << std::endl;
-    // for(int i = 0; i < 256; i++) {
-    //     for (int j = 0; j < 256; j++) {
-    //         out << j << " ";
-    //         out << i << " ";
-    //         out << 0 << "\t";
-
-    //     }
-    //     out << "\n";
-    // }
-    // out.close();
+    std::cout << "Ray tracer starting..." << std::endl;
+    for (int i = 0; i < 256; i++)
+    {
+        for (int j = 0; j < 256; j++)
+        {
+            Vec3 pixel = Vec3(i, j, 0);
+            Ray ray = Ray(eye, pixel - eye);
+            double brightness = sphere.hit(ray);
+            // std::cout << brightness << std::endl;
+            if (brightness <= 0)
+            {
+                out << 0 << " ";
+                out << 0 << " ";
+                out << 255 << "\t";
+            }
+            else
+            {
+                // std::cout << brightness << " " << 255 * brightness << std::endl;
+                out << (int)(255 * brightness) << " ";
+                out << 0 << " ";
+                out << (int)(100 * brightness) << "\t";
+            }
+        }
+        out << "\n";
+    }
+    out.close();
     return 0;
 }

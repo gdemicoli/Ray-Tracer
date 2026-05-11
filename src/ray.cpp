@@ -1,10 +1,10 @@
-#include "ray.h"
+#include "Ray.h"
 
-ray::ray(vec3 origin, vec3 direction)
+Ray::Ray(Vec3 origin, Vec3 direction)
     : origin(origin), direction(direction)
 {
 }
 
-vec3 ray::at(double t){
+Vec3 Ray::at(double t) const{
     return origin + direction * t;
 }

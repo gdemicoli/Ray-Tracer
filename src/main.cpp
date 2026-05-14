@@ -5,6 +5,7 @@
 #include "Ray.h"
 #include "Sphere.h"
 #include "HitRecord.h"
+#include "Scene.h"
 
 int main()
 {
@@ -16,9 +17,13 @@ int main()
     out << "255\n";
 
     std::string str = "";
+    Scene scene = Scene();
 
-    Sphere sphere = Sphere(Vec3(128, 128, 10), 70);
-    Vec3 eye = Vec3(128, 128, -100);
+    for (int i = 1; i < 5; i++)
+    {
+        scene.addObject(Sphere(Vec3(32 * i, 128, 10), 70));
+    }
+    Vec3 eye = Vec3(256, 256, -100);
 
     std::cout << "Ray tracer starting..." << std::endl;
     for (int i = 0; i < 256; i++)
@@ -27,7 +32,7 @@ int main()
         {
             Vec3 pixel = Vec3(i, j, 0);
             Ray ray = Ray(eye, pixel - eye);
-            HitRecord hitRecord = sphere.hit(ray);
+            HitRecord hitRecord = scene.sceneCollision(ray);
             double brightness = (ray.direction.normalise() * -1) * hitRecord.normal;
 
             if (hitRecord.hit == true && brightness > 0)

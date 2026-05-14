@@ -1,7 +1,7 @@
 #pragma once
 #include "Vec3.h"
 #include "Ray.h"
-
+#include "HitRecord.h"
 class Sphere
 {
 public:
@@ -9,5 +9,5 @@ public:
     double radius;
 
     Sphere(Vec3 centre, double radius);
-    double hit(const Ray& ray);
+    HitRecord hit(const Ray& ray);
 };

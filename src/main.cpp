@@ -4,6 +4,7 @@
 #include "Vec3.h"
 #include "Ray.h"
 #include "Sphere.h"
+#include "HitRecord.h"
 
 int main()
 {
@@ -26,20 +27,22 @@ int main()
         {
             Vec3 pixel = Vec3(i, j, 0);
             Ray ray = Ray(eye, pixel - eye);
-            double brightness = sphere.hit(ray);
-            // std::cout << brightness << std::endl;
-            if (brightness <= 0)
+            HitRecord hitRecord = sphere.hit(ray);
+            double brightness = (ray.direction.normalise() * -1) * hitRecord.normal;
+
+            if (hitRecord.hit == true && brightness > 0)
+            {
+
+                out << (int)(100 * brightness) << " ";
+                out << 0 << " ";
+                out << (int)(0) << "\t";
+            }
+
+            else
             {
                 out << 0 << " ";
                 out << 0 << " ";
                 out << 255 << "\t";
-            }
-            else
-            {
-                // std::cout << brightness << " " << 255 * brightness << std::endl;
-                out << (int)(255 * brightness) << " ";
-                out << 0 << " ";
-                out << (int)(100 * brightness) << "\t";
             }
         }
         out << "\n";

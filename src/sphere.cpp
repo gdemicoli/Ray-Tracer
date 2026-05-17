@@ -21,7 +21,7 @@ HitRecord Sphere::hit(const Ray &ray)
 
     if (t2 > 0) // sphere is in front 
     {
-        return HitRecord{true, t2, (ray.at(t2) - centre).normalise(), ray.at(t2).normalise()};
+        return HitRecord{true, t2, (ray.at(t2) - centre).normalise(), ray.at(t2)};
     }
 
     else if (t1 > 0) // inside sphere

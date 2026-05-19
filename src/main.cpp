@@ -7,6 +7,7 @@
 #include "HitRecord.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "Materials.h"
 
 int main()
 {
@@ -20,9 +21,9 @@ int main()
     std::string str = "";
     Scene scene = Scene();
 
-    scene.addObject(Sphere(Vec3(128, -200, -50), 100));
+    scene.addObject(Sphere(Vec3(128, -200, -50), 100, Materials(Vec3(100, 100, 0))));
 
-    scene.addObject(Sphere(Vec3(128, -150, 125), 75));
+    scene.addObject(Sphere(Vec3(128, -150, 125), 75, Materials(Vec3(0, 0, 130))));
 
     Vec3 eye = Vec3(128, 150, 200);
 
@@ -48,15 +49,15 @@ int main()
                 double brightness = (lightRay.direction.normalise() * -1) * hitRecord.normal;
                 if (shadow.hit)
                 {
-                    out << 20 << " ";
-                    out << 0 << " ";
-                    out << 0 << "\t";
+                    out << (int)(hitRecord.materials.colour.x * 0.01) << " ";
+                    out << (int)(hitRecord.materials.colour.y * 0.01) << " ";
+                    out << (int)(hitRecord.materials.colour.z * 0.01) << "\t";
                 }
                 else if (brightness > 0)
                 {
-                    out << (int)(255 * brightness) << " ";
-                    out << 0 << " ";
-                    out << (int)(0) << "\t";
+                    out << (int)(hitRecord.materials.colour.x * brightness) << " ";
+                    out << (int)(hitRecord.materials.colour.y * brightness) << " ";
+                    out << (int)(hitRecord.materials.colour.z * brightness) << "\t";
                 }
 
                 else

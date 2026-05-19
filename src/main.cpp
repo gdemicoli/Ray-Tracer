@@ -6,6 +6,7 @@
 #include "Sphere.h"
 #include "HitRecord.h"
 #include "Scene.h"
+#include "Camera.h"
 
 int main()
 {
@@ -23,9 +24,10 @@ int main()
 
     scene.addObject(Sphere(Vec3(128, -150, 125), 75));
 
-    Vec3 eye = Vec3(128, 100, 128);
+    Vec3 eye = Vec3(128, 150, 200);
 
     Vec3 lightSource = Vec3(128, 0, 200); // chack shadows properly...
+    Camera camera = Camera(eye, 256, 256);
 
     std::cout << "Ray tracer starting..." << std::endl;
     for (int i = 255; i > -1; i--)
@@ -33,8 +35,7 @@ int main()
         for (int j = 255; j > -1; j--)
         {
 
-            Vec3 pixel = Vec3(j, 0, i);
-            Ray ray = Ray(eye, pixel - eye);
+            Ray ray = camera.getRay(i, j);
             HitRecord hitRecord = scene.sceneCollision(ray);
             // hitppoint from eye
             //  calculate hitpoint - lightsoutce,

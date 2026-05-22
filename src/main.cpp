@@ -47,24 +47,24 @@ int main()
                 Ray lightRay = Ray(lightSource, hitRecord.hitPoint - lightSource);
                 HitRecord shadow = scene.sceneCollision(Ray(hitRecord.hitPoint + hitRecord.normal * 0.001, lightSource - hitRecord.hitPoint));
                 double brightness = (lightRay.direction.normalise() * -1) * hitRecord.normal;
-                if (shadow.hit)
+                if (shadow.hit) // in shadow
                 {
                     out << (int)(hitRecord.materials.colour.x * 0.01) << " ";
                     out << (int)(hitRecord.materials.colour.y * 0.01) << " ";
                     out << (int)(hitRecord.materials.colour.z * 0.01) << "\t";
                 }
-                else if (brightness > 0)
+                else if (brightness > 0) // hit by light
                 {
                     out << (int)(hitRecord.materials.colour.x * brightness) << " ";
                     out << (int)(hitRecord.materials.colour.y * brightness) << " ";
                     out << (int)(hitRecord.materials.colour.z * brightness) << "\t";
                 }
 
-                else
+                else // not facing light
                 {
-                    out << 10 << " ";
-                    out << 0 << " ";
-                    out << 0 << "\t";
+                    out << (int)(hitRecord.materials.colour.x * 0.05) << " ";
+                    out << (int)(hitRecord.materials.colour.y * 0.05) << " ";
+                    out << (int)(hitRecord.materials.colour.z * 0.05) << "\t";
                 }
             }
 
@@ -78,5 +78,13 @@ int main()
         out << "\n";
     }
     out.close();
+
+    Vec3 norm = Vec3(0,1,0);
+    Vec3 ray = Vec3(1,-1,0);
+
+    Vec3 reflection = norm.reflect(ray);
+
+    std::cout << reflection.x << " " << reflection.y <<std::endl;
+
     return 0;
 }

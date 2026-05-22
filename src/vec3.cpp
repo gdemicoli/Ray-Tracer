@@ -37,3 +37,14 @@ Vec3 Vec3::normalise() const
 
     return Vec3(x / len, y / len, z / len);
 }
+
+Vec3 Vec3::reflect(Vec3 &light) const
+{
+    double dp = (light.normalise() * (*this));
+    Vec3 dig = (*this) * dp;
+    Vec3 deepDig = dig * 2;
+    Vec3 reflection = light.normalise() - deepDig;
+
+    return reflection;
+
+}

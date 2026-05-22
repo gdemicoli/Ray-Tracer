@@ -15,4 +15,5 @@ public:
     double operator*(const Vec3 &other) const; //dot product
     double length() const; // magnitude
     Vec3 normalise() const; // unit vector
+    Vec3 reflect(Vec3 &light) const;
 };

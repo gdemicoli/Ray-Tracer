@@ -15,7 +15,7 @@ int main()
 
     Scene scene = Scene();
 
-    scene.addObject(Sphere(Vec3(128, -200, -50), 100, Materials(Vec3(100, 100, 0), 1.0)));
+    scene.addObject(Sphere(Vec3(128, -200, -50), 100, Materials(Vec3(100, 0, 0), 1.0)));
 
     scene.addObject(Sphere(Vec3(128, -150, 125), 75, Materials(Vec3(0, 0, 130), 0.5)));
 

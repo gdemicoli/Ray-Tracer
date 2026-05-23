@@ -4,6 +4,8 @@ class Materials
 {
 public:
     Vec3 colour;
+    double reflectivity;
 
-    Materials(Vec3 colour);
+    Materials(Vec3 colour, double reflectivity);
+
 };

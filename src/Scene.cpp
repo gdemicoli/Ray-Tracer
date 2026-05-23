@@ -15,7 +15,7 @@ void Scene::addObject(const Sphere &sphere)
 HitRecord Scene::sceneCollision(const Ray &ray)
 {
 
-    HitRecord closest = HitRecord{false, 0, Vec3(0, 0, 0), Vec3(0, 0, 0), Materials(Vec3(0,0,0))};
+    HitRecord closest = HitRecord{false, 0, Vec3(0, 0, 0), Vec3(0, 0, 0), Materials(Vec3(0,0,0), 0)};
     for (Sphere obj : objects)
     {
         HitRecord hit = obj.hit(ray);

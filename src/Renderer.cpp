@@ -10,6 +10,10 @@
 Renderer::Renderer(Scene scene, Camera camera, Vec3 lightSource) : scene(scene), camera(camera), lightSource(lightSource)
 {
 }
+// TO-DO:
+// Change colors in main to use a 0.0 to 1.0 scale instead of 100, and alter PPM printer to multiply the final output by 255.
+
+// Ensure sceneCollision isn't registering shadows from objects sitting behind light source point.
 
 void Renderer::render(const std::string &outputFile)
 {
@@ -24,9 +28,9 @@ void Renderer::render(const std::string &outputFile)
         for (int j = 255; j > -1; j--)
         {
             Vec3 pixelColour = getColour(camera.getRay(i, j), 5); // retrieves ray from eye to pixel
-            out << (int)pixelColour.x << " ";
-            out << (int)pixelColour.y << " ";
-            out << (int)pixelColour.z << "\t";
+            out << (int)(pixelColour.x * 255) << " ";
+            out << (int)(pixelColour.y * 255) << " ";
+            out << (int)(pixelColour.z * 255) << "\t";
         }
         out << "\n";
     }
@@ -42,7 +46,7 @@ Vec3 Renderer::getColour(Ray ray, double depth)
     //  calculate hitpoint - lightsoutce,
     // gives me the direction the light is hitting the point at
 
-    if (hitRecord.hit == true && depth > 0) // we can see something
+    if (hitRecord.hit == true) // we can see something
     {
         Ray reflectionRay = Ray(hitRecord.hitPoint + hitRecord.normal * 0.001, ray.direction.reflect(hitRecord.normal));
 
@@ -51,7 +55,9 @@ Vec3 Renderer::getColour(Ray ray, double depth)
         double brightness = (lightRay.direction.normalise() * -1) * hitRecord.normal;
         Vec3 surfaceColour(0, 0, 0);
 
-        if (shadow.hit) // in shadow
+        double distanceToLight = (lightSource - hitRecord.hitPoint).length();
+
+        if (shadow.hit && shadow.tValue < distanceToLight) // in shadow
         {
             surfaceColour = hitRecord.materials.colour * 0.1;
         }
@@ -65,7 +71,7 @@ Vec3 Renderer::getColour(Ray ray, double depth)
             surfaceColour = hitRecord.materials.colour * 0.05;
         }
 
-        if (hitRecord.materials.reflectivity > 0)
+        if (hitRecord.materials.reflectivity > 0 && depth > 0)
         {
             return surfaceColour * (1 - hitRecord.materials.reflectivity) + getColour(reflectionRay, depth - 1) * hitRecord.materials.reflectivity;
         }
@@ -75,30 +81,8 @@ Vec3 Renderer::getColour(Ray ray, double depth)
         }
     }
 
-    else if (hitRecord.hit == true) // we can see something
-    {
-
-        Ray lightRay = Ray(lightSource, hitRecord.hitPoint - lightSource);
-        HitRecord shadow = scene.sceneCollision(Ray(hitRecord.hitPoint + hitRecord.normal * 0.001, lightSource - hitRecord.hitPoint));
-        double brightness = (lightRay.direction.normalise() * -1) * hitRecord.normal;
-
-        if (shadow.hit) // in shadow
-        {
-            return hitRecord.materials.colour * 0.1;
-        }
-        else if (brightness > 0) // hit by light
-        {
-            return hitRecord.materials.colour * brightness;
-        }
-
-        else // not facing light
-        {
-            return hitRecord.materials.colour * 0.05;
-        }
-    }
-
     else
     {
-        return Vec3(0, 0, 255);
+        return Vec3(0, 0, 1);
     }
 }

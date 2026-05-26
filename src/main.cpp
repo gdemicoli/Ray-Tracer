@@ -15,9 +15,9 @@ int main()
 
     Scene scene = Scene();
 
-    scene.addObject(Sphere(Vec3(128, -200, -50), 100, Materials(Vec3(100, 0, 0), 0.5)));
+    scene.addObject(Sphere(Vec3(128, -200, -50), 100, Materials(Vec3(0.5, 0, 0), 0.5)));// red
 
-    scene.addObject(Sphere(Vec3(128, -150, 125), 75, Materials(Vec3(0, 100, 0), 0.2)));
+    scene.addObject(Sphere(Vec3(64, -150, 125), 75, Materials(Vec3(0, 0.5, 0), 0.2)));//green
 
     Vec3 eye = Vec3(128, 200, 200);
 

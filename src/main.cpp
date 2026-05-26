@@ -15,14 +15,14 @@ int main()
 
     Scene scene = Scene();
 
-    scene.addObject(Sphere(Vec3(128, -200, -50), 100, Materials(Vec3(0.5, 0, 0), 0.5)));// red
+    scene.addObject(Sphere(Vec3(700, -1000, 0), 300, Materials(Vec3(0.5, 0, 0), 0.5)));// red
 
-    scene.addObject(Sphere(Vec3(64, -150, 125), 75, Materials(Vec3(0, 0.5, 0), 0.2)));//green
+    scene.addObject(Sphere(Vec3(200, -500, 500), 500, Materials(Vec3(0, 0.5, 0), 0.2)));//green
 
-    Vec3 eye = Vec3(128, 200, 200);
+    Vec3 eye = Vec3(500, 1500, 500); //done
 
-    Vec3 lightSource = Vec3(128, 0, 200); // chack shadows properly...
-    Camera camera = Camera(eye, 256, 256);
+    Vec3 lightSource = Vec3(500, 500, 1500); //done
+    Camera camera = Camera(eye, 1024, 1024);
     Renderer renderer(scene, camera, lightSource);
     renderer.render("image.ppm");
 

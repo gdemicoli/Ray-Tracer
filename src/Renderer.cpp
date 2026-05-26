@@ -7,7 +7,9 @@
 #include "Ray.h"
 #include "Vec3.h"
 
-Renderer::Renderer(Scene scene, Camera camera, Vec3 lightSource) : scene(scene), camera(camera), lightSource(lightSource)
+Renderer::Renderer(Scene scene, Camera camera, Vec3 lightSource)
+    : scene(scene), camera(camera), lightSource(lightSource),
+      rng(42), dist(-0.5, 0.5)
 {
 }
 // TO-DO:
@@ -21,13 +23,26 @@ void Renderer::render(const std::string &outputFile)
     std::ofstream out(outputFile);
 
     out << "P3\n";
-    out << "256 256\n";
+    out << "1024 1024\n";
     out << "255\n";
-    for (int i = 255; i > -1; i--)
+    int samples = 16;
+    for (int i = 1023; i > -1; i--)
     {
-        for (int j = 255; j > -1; j--)
+        for (int j = 1023; j > -1; j--)
         {
-            Vec3 pixelColour = getColour(camera.getRay(i, j), 5); // retrieves ray from eye to pixel
+            Vec3 accumulated = Vec3(0, 0, 0);
+
+            for (int s = 0; s < samples; s++)
+            {
+                double di = i + dist(rng);
+                double dj = j + dist(rng);
+                accumulated = accumulated + getColour(camera.getRay(di, dj), 10);
+            }
+            if (i == 512 && j == 512)
+            {
+                std::cout << "accumulated: " << accumulated.x << " " << accumulated.y << " " << accumulated.z << std::endl;
+            }
+            Vec3 pixelColour = accumulated * (1.0 / samples);
             out << (int)(pixelColour.x * 255) << " ";
             out << (int)(pixelColour.y * 255) << " ";
             out << (int)(pixelColour.z * 255) << "\t";

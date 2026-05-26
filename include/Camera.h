@@ -10,5 +10,5 @@ public:
     int imageWidth;
 
     Camera(Vec3 &eyePos, int imageHeight, int imageWidth);
-    Ray getRay(int i, int j);
+    Ray getRay(double i, double j);
 };

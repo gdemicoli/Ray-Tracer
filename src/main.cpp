@@ -11,8 +11,32 @@
 #include "Renderer.h"
 #include <chrono>
 
-int main()
+int main(int argc, char *argv[])
 {
+    int width = 1024;
+    int height = 1024;
+    int samples = 16;
+    std::string output = "image.ppm";
+    for (int i = 1; i < argc; i++)
+    {
+        if (std::string(argv[i]) == "--samples")
+        {
+            samples = std::stoi(argv[i + 1]);
+        }
+
+        else if (std::string(argv[i]) == "--width")
+        {
+            width = std::stoi(argv[i + 1]);
+        }
+        else if (std::string(argv[i]) == "--height")
+        {
+            height = std::stoi(argv[i + 1]);
+        }
+        else if (std::string(argv[i]) == "--output")
+        {
+            output = argv[i + 1];
+        }
+    }
 
     Scene scene = Scene();
 
@@ -27,7 +51,7 @@ int main()
 
     Renderer renderer(scene, camera, lightSource);
 
-    std::cout << "Starting baseline render (1024x1024, 16 samples)..." << std::endl;
+    std::cout << "Starting render (1024x1024, 16 samples)..." << std::endl;
 
     auto start = std::chrono::high_resolution_clock::now();
     renderer.render("image.ppm");

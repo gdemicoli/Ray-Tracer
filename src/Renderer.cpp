@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <thread>
 #include "Renderer.h"
 #include "Scene.h"
 #include "Camera.h"
@@ -12,21 +13,50 @@ Renderer::Renderer(Scene scene, Camera camera, Vec3 lightSource)
       rng(42), dist(-0.5, 0.5)
 {
 }
-// TO-DO:
-// Change colors in main to use a 0.0 to 1.0 scale instead of 100, and alter PPM printer to multiply the final output by 255.
-
-// Ensure sceneCollision isn't registering shadows from objects sitting behind light source point.
 
 void Renderer::render(const std::string &outputFile)
 {
-    std::cout << "Ray tracer starting..." << std::endl;
+    std::vector<std::vector<Vec3>> buffer(1024, std::vector<Vec3>(1024, Vec3(0, 0, 0)));
+    std::vector<std::thread> threads;
+
+    int rowsPerThread = 1024 / 10;
+
+    for (int t = 0; t < 10; t++)
+    {
+        int startRow = t * rowsPerThread;
+        int endRow = startRow + rowsPerThread;
+        threads.push_back(std::thread(&Renderer::renderSection, this, startRow, endRow, std::ref(buffer)));
+    }
+
+    for (auto &t : threads)
+    {
+        t.join();
+    }
+
     std::ofstream out(outputFile);
 
     out << "P3\n";
     out << "1024 1024\n";
     out << "255\n";
+
+    for (int i = 1023; i >= 0; i--)
+    {
+        for (int j = 1023; j >= 0; j--)
+        {
+            out << (int)(buffer[i][j].x * 255) << " ";
+            out << (int)(buffer[i][j].y * 255) << " ";
+            out << (int)(buffer[i][j].z * 255) << "\t";
+        }
+        out << "\n";
+    }
+
+    out.close();
+}
+
+void Renderer::renderSection(int startRow, int endRow, std::vector<std::vector<Vec3>> &buffer)
+{
     int samples = 16;
-    for (int i = 1023; i > -1; i--)
+    for (int i = startRow; i < endRow; i++)
     {
         for (int j = 1023; j > -1; j--)
         {
@@ -39,14 +69,9 @@ void Renderer::render(const std::string &outputFile)
                 accumulated = accumulated + getColour(camera.getRay(di, dj), 10);
             }
 
-            Vec3 pixelColour = accumulated * (1.0 / samples);
-            out << (int)(pixelColour.x * 255) << " ";
-            out << (int)(pixelColour.y * 255) << " ";
-            out << (int)(pixelColour.z * 255) << "\t";
+            buffer[i][j] = accumulated * (1.0 / samples);
         }
-        out << "\n";
     }
-    out.close();
 }
 
 Vec3 Renderer::getColour(Ray ray, double depth)

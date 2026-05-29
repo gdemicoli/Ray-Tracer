@@ -47,14 +47,14 @@ int main(int argc, char *argv[])
     Vec3 eye = Vec3(500, 1500, 500); // done
 
     Vec3 lightSource = Vec3(500, 500, 1500); // done
-    Camera camera = Camera(eye, 1024, 1024);
+    Camera camera = Camera(eye, width, height);
 
-    Renderer renderer(scene, camera, lightSource);
+    Renderer renderer(scene, camera, lightSource, samples);
 
-    std::cout << "Starting render (1024x1024, 16 samples)..." << std::endl;
+    std::cout << "Starting render (" << width << "x" << height << ", " << samples << " samples)..." << std::endl;
 
     auto start = std::chrono::high_resolution_clock::now();
-    renderer.render("image.ppm");
+    renderer.render(output);
 
     auto end = std::chrono::high_resolution_clock::now();
 

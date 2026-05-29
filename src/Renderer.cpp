@@ -2,14 +2,15 @@
 #include <fstream>
 #include <string>
 #include <thread>
+#include <atomic>
 #include "Renderer.h"
 #include "Scene.h"
 #include "Camera.h"
 #include "Ray.h"
 #include "Vec3.h"
 
-Renderer::Renderer(Scene scene, Camera camera, Vec3 lightSource)
-    : scene(scene), camera(camera), lightSource(lightSource),
+Renderer::Renderer(Scene scene, Camera camera, Vec3 lightSource, int samples)
+    : scene(scene), camera(camera), lightSource(lightSource), samples(samples),
       rng(42), dist(-0.5, 0.5)
 {
 }
@@ -19,7 +20,7 @@ void Renderer::render(const std::string &outputFile)
     std::vector<std::vector<Vec3>> buffer(1024, std::vector<Vec3>(1024, Vec3(0, 0, 0)));
     std::vector<std::thread> threads;
 
-    int rowsPerThread = 1024 / 10;
+    int rowsPerThread = camera.imageHeight / 10;
 
     for (int t = 0; t < 10; t++)
     {
@@ -36,12 +37,12 @@ void Renderer::render(const std::string &outputFile)
     std::ofstream out(outputFile);
 
     out << "P3\n";
-    out << "1024 1024\n";
+    out << camera.imageWidth << " " << camera.imageHeight << "\n";
     out << "255\n";
 
-    for (int i = 1023; i >= 0; i--)
+    for (int i = camera.imageHeight - 1; i >= 0; i--)
     {
-        for (int j = 1023; j >= 0; j--)
+        for (int j = camera.imageWidth - 1; j >= 0; j--)
         {
             out << (int)(buffer[i][j].x * 255) << " ";
             out << (int)(buffer[i][j].y * 255) << " ";
@@ -55,10 +56,10 @@ void Renderer::render(const std::string &outputFile)
 
 void Renderer::renderSection(int startRow, int endRow, std::vector<std::vector<Vec3>> &buffer)
 {
-    int samples = 16;
+
     for (int i = startRow; i < endRow; i++)
     {
-        for (int j = 1023; j > -1; j--)
+        for (int j = camera.imageWidth - 1; j > -1; j--)
         {
             Vec3 accumulated = Vec3(0, 0, 0);
 
@@ -70,6 +71,13 @@ void Renderer::renderSection(int startRow, int endRow, std::vector<std::vector<V
             }
 
             buffer[i][j] = accumulated * (1.0 / samples);
+            completedRows++;
+            if (completedRows % camera.imageWidth == 0)
+            {
+                std::lock_guard<std::mutex> lock(printMutex);
+                int percent = (completedRows * 100) / (camera.imageHeight * camera.imageWidth);
+                std::cout << "\rProgress: " << percent << "%" << std::flush;
+            }
         }
     }
 }

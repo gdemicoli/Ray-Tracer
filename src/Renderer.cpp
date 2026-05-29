@@ -38,10 +38,7 @@ void Renderer::render(const std::string &outputFile)
                 double dj = j + dist(rng);
                 accumulated = accumulated + getColour(camera.getRay(di, dj), 10);
             }
-            if (i == 512 && j == 512)
-            {
-                std::cout << "accumulated: " << accumulated.x << " " << accumulated.y << " " << accumulated.z << std::endl;
-            }
+
             Vec3 pixelColour = accumulated * (1.0 / samples);
             out << (int)(pixelColour.x * 255) << " ";
             out << (int)(pixelColour.y * 255) << " ";
@@ -98,6 +95,8 @@ Vec3 Renderer::getColour(Ray ray, double depth)
 
     else
     {
-        return Vec3(0, 0, 1);
+        double t = 0.5 * (ray.direction.normalise().z + 1.0);
+        return Vec3(1, 1, 1) * (1 - t) + Vec3(0.5, 0.7, 1.0) * t;
+        // return Vec3(0, 0, 1);
     }
 }

@@ -24,4 +24,5 @@ private:
     std::uniform_real_distribution<double> dist;
     std::atomic<int> completedRows{0};
     std::mutex printMutex;
+    Vec3 randomUnitSphere();
 };

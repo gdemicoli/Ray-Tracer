@@ -93,7 +93,9 @@ Vec3 Renderer::getColour(Ray ray, double depth)
 
     if (hitRecord.hit == true) // we can see something
     {
-        Ray reflectionRay = Ray(hitRecord.hitPoint + hitRecord.normal * 0.001, ray.direction.reflect(hitRecord.normal));
+        Vec3 reflected = ray.direction.reflect(hitRecord.normal);
+        Vec3 roughReflected = (reflected + randomUnitSphere() * hitRecord.materials.roughness).normalise();
+        Ray reflectionRay = Ray(hitRecord.hitPoint + hitRecord.normal * 0.001, roughReflected);
 
         Ray lightRay = Ray(lightSource, hitRecord.hitPoint - lightSource);
         HitRecord shadow = scene.sceneCollision(Ray(hitRecord.hitPoint + hitRecord.normal * 0.001, lightSource - hitRecord.hitPoint));
@@ -113,7 +115,7 @@ Vec3 Renderer::getColour(Ray ray, double depth)
 
         else // not facing light
         {
-            surfaceColour = hitRecord.materials.colour * 0.05;
+            surfaceColour = hitRecord.materials.colour * 0.08;
         }
 
         if (hitRecord.materials.reflectivity > 0 && depth > 0)
@@ -128,8 +130,17 @@ Vec3 Renderer::getColour(Ray ray, double depth)
 
     else
     {
-        double t = 0.5 * (ray.direction.normalise().z + 1.0);
-        return Vec3(1, 1, 1) * (1 - t) + Vec3(0.5, 0.7, 1.0) * t;
-        // return Vec3(0, 0, 1);
+        return Vec3(0.1, 0.1, 0.15);
+    }
+}
+
+Vec3 Renderer::randomUnitSphere()
+{
+    std::uniform_real_distribution<double> d(-1.0, 1.0);
+    while (true)
+    {
+        Vec3 v(d(rng), d(rng), d(rng));
+        if (v.length() <= 1.0)
+            return v;
     }
 }

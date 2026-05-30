@@ -17,7 +17,7 @@ Renderer::Renderer(Scene scene, Camera camera, Vec3 lightSource, int samples)
 
 void Renderer::render(const std::string &outputFile)
 {
-    std::vector<std::vector<Vec3>> buffer(1024, std::vector<Vec3>(1024, Vec3(0, 0, 0)));
+    std::vector<std::vector<Vec3>> buffer(camera.imageHeight, std::vector<Vec3>(camera.imageWidth, Vec3(0, 0, 0)));
     std::vector<std::thread> threads;
 
     int rowsPerThread = camera.imageHeight / 10;
@@ -130,7 +130,8 @@ Vec3 Renderer::getColour(Ray ray, double depth)
 
     else
     {
-        return Vec3(0.1, 0.1, 0.15);
+        double t = std::clamp(0.5 * (-ray.direction.normalise().y + 1.0), 0.0, 1.0);
+        return Vec3(0.7, 0.8, 1.0) * (1 - t) + Vec3(0.2, 0.4, 0.9) * t;
     }
 }
 

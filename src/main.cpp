@@ -40,10 +40,10 @@ int main(int argc, char *argv[])
 
     Scene scene = Scene();
 
-    scene.addObject(Sphere(Vec3(512, -800, 200), 400, Materials(Vec3(0.8, 0.2, 0.2), 0.9, 0)));    // big red, low reflect
+    scene.addObject(Sphere(Vec3(512, -800, 200), 400, Materials(Vec3(0.8, 0.2, 0.2), 0.9, 0)));   // big red, low reflect
     scene.addObject(Sphere(Vec3(200, -400, 600), 200, Materials(Vec3(0.2, 0.2, 0.8), 0.3, 0.1))); // blue, medium reflect
-    scene.addObject(Sphere(Vec3(800, -300, 500), 150, Materials(Vec3(0.2, 0.8, 0.2), 0.1, 0.9)));  // green, no reflect
-    scene.addObject(Sphere(Vec3(400, -200, 800), 100, Materials(Vec3(0.8, 0.8, 0.2), 0.9, 0.9)));  // yellow, mirror
+    scene.addObject(Sphere(Vec3(800, -300, 500), 150, Materials(Vec3(0.2, 0.8, 0.2), 0.1, 0.9))); // green, no reflect
+    scene.addObject(Sphere(Vec3(400, -200, 800), 100, Materials(Vec3(0.8, 0.8, 0.2), 1, 0)));     // yellow, mirror
 
     Vec3 eye = Vec3(512, 800, 1200);
     Vec3 lightSource = Vec3(200, 1000, 1500);

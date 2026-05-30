@@ -104,18 +104,18 @@ Vec3 Renderer::getColour(Ray ray, double depth)
 
         double distanceToLight = (lightSource - hitRecord.hitPoint).length();
 
-        if (shadow.hit && shadow.tValue < distanceToLight) // in shadow
-        {
-            surfaceColour = hitRecord.materials.colour * 0.1;
-        }
-        else if (brightness > 0) // hit by light
-        {
-            surfaceColour = hitRecord.materials.colour * brightness;
-        }
+        double ambient = 0.05;
+        double lit = std::max(brightness, ambient);
+        surfaceColour = hitRecord.materials.colour * lit;
 
-        else // not facing light
+        if (shadow.hit && shadow.tValue < distanceToLight)
         {
-            surfaceColour = hitRecord.materials.colour * 0.08;
+            surfaceColour = hitRecord.materials.colour * ambient;
+        }
+        else
+        {
+            double lit = std::max(brightness, ambient);
+            surfaceColour = hitRecord.materials.colour * lit;
         }
 
         if (hitRecord.materials.reflectivity > 0 && depth > 0)

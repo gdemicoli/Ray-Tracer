@@ -40,11 +40,8 @@ Vec3 Vec3::normalise() const
 
 Vec3 Vec3::reflect(Vec3 &surfaceNorm) const
 {
-    double dp = (surfaceNorm.normalise() * (*this).normalise());
-    Vec3 dig = (*this).normalise() * dp;
-    Vec3 deepDig = dig * 2;
-    Vec3 reflection = surfaceNorm.normalise() - deepDig;
-
-    return reflection;
-
+    Vec3 normD = (*this).normalise();     // normalise ray direction
+    Vec3 normN = surfaceNorm.normalise(); // normalise surface normal
+    double dp = normD * normN;            // dot product
+    return normD - normN * 2 * dp;        // D - 2(D·N)N
 }
